@@ -4,15 +4,29 @@ import (
 	"testing"
 )
 
+func TestIp2Region_BinarySearch(t *testing.T) {
+	region, err := New("ip2region.db")
+	if err != nil {
+		t.Error(err)
+	}
+	for i := 0; i < 1000; i++ {
+		ip := RandomIp()
+		ipInfo, err := region.BtreeSearch(ip)
+		if err != nil {
+			t.Error(err)
+		} else {
+			t.Log(ip, ipInfo.City)
+		}
+	}
+}
 func BenchmarkBtreeSearch(B *testing.B) {
 	region, err := New("ip2region.db")
 	if err != nil {
 		B.Error(err)
 	}
-	for i:=0;i<B.N;i++{
+	for i := 0; i < B.N; i++ {
 		region.BtreeSearch("127.0.0.1")
 	}
-
 }
 
 func BenchmarkMemorySearch(B *testing.B) {
@@ -20,7 +34,7 @@ func BenchmarkMemorySearch(B *testing.B) {
 	if err != nil {
 		B.Error(err)
 	}
-	for i:=0;i<B.N;i++{
+	for i := 0; i < B.N; i++ {
 		region.MemorySearch("127.0.0.1")
 	}
 
@@ -31,7 +45,7 @@ func BenchmarkBinarySearch(B *testing.B) {
 	if err != nil {
 		B.Error(err)
 	}
-	for i:=0;i<B.N;i++{
+	for i := 0; i < B.N; i++ {
 		region.BinarySearch("127.0.0.1")
 	}
 
